@@ -1,0 +1,5 @@
+qdrant-client>=1.12
+fastembed>=0.4
+ollama>=0.4
+pypdf>=5.0
+cryptography>=3.1

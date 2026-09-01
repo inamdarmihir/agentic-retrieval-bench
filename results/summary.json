@@ -1,0 +1,78 @@
+{
+  "overall": {
+    "keyword": {
+      "n": 45,
+      "evidence_recall": 0.022222222222222223,
+      "answer_correct": 0.2222222222222222,
+      "avg_tool_calls": 0.9333333333333333,
+      "avg_turns": 1.9333333333333333,
+      "avg_wall_clock_s": 11.411589108573066,
+      "p50_wall_clock_s": 11.737879991531372
+    },
+    "vector": {
+      "n": 45,
+      "evidence_recall": 0.4,
+      "answer_correct": 0.3333333333333333,
+      "avg_tool_calls": 1.0222222222222221,
+      "avg_turns": 2.022222222222222,
+      "avg_wall_clock_s": 13.91305341190762,
+      "p50_wall_clock_s": 13.82904314994812
+    }
+  },
+  "by_type": {
+    "novel-generated__keyword": {
+      "n": 15,
+      "evidence_recall": 0.06666666666666667,
+      "answer_correct": 0.13333333333333333,
+      "avg_tool_calls": 0.9333333333333333,
+      "avg_turns": 1.9333333333333333,
+      "avg_wall_clock_s": 10.976081069310506,
+      "p50_wall_clock_s": 11.84233808517456
+    },
+    "novel-generated__vector": {
+      "n": 15,
+      "evidence_recall": 0.26666666666666666,
+      "answer_correct": 0.3333333333333333,
+      "avg_tool_calls": 1.0,
+      "avg_turns": 2.0,
+      "avg_wall_clock_s": 13.51628335316976,
+      "p50_wall_clock_s": 13.82904314994812
+    },
+    "metrics-generated__keyword": {
+      "n": 15,
+      "evidence_recall": 0.0,
+      "answer_correct": 0.0,
+      "avg_tool_calls": 0.8666666666666667,
+      "avg_turns": 1.8666666666666667,
+      "avg_wall_clock_s": 11.062643973032634,
+      "p50_wall_clock_s": 11.604989051818848
+    },
+    "metrics-generated__vector": {
+      "n": 15,
+      "evidence_recall": 0.6,
+      "answer_correct": 0.06666666666666667,
+      "avg_tool_calls": 1.0,
+      "avg_turns": 2.0,
+      "avg_wall_clock_s": 14.0539901415507,
+      "p50_wall_clock_s": 13.933672189712524
+    },
+    "domain-relevant__keyword": {
+      "n": 15,
+      "evidence_recall": 0.0,
+      "answer_correct": 0.5333333333333333,
+      "avg_tool_calls": 1.0,
+      "avg_turns": 2.0,
+      "avg_wall_clock_s": 12.196042283376057,
+      "p50_wall_clock_s": 11.737879991531372
+    },
+    "domain-relevant__vector": {
+      "n": 15,
+      "evidence_recall": 0.3333333333333333,
+      "answer_correct": 0.6,
+      "avg_tool_calls": 1.0666666666666667,
+      "avg_turns": 2.066666666666667,
+      "avg_wall_clock_s": 14.168886741002401,
+      "p50_wall_clock_s": 13.7742280960083
+    }
+  }
+}
