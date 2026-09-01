@@ -1,4 +1,4 @@
-# qdrant-agentic-retrieval-bench
+# agentic-retrieval-bench
 
 Does an agent actually need a vector database, or does keyword search over
 the raw documents get it most of the way there? A February 2026 Amazon
