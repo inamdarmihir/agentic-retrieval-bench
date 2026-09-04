@@ -6,7 +6,6 @@ run to results/raw_results.jsonl as it goes, so a partial run is never lost.
 
 import argparse
 import json
-import random
 import time
 from pathlib import Path
 
@@ -15,38 +14,39 @@ from qdrant_client import QdrantClient
 
 from agent import run_agent
 from evaluate import is_correct
+from sampling import SEED, stratified_sample
 from tools import KeywordSearchTool, VectorSearchTool, load_corpus
 
 QUESTIONS_PATH = Path(__file__).parent / "data" / "questions.jsonl"
-RESULTS_PATH = Path(__file__).parent / "results" / "raw_results.jsonl"
+DEFAULT_RESULTS_PATH = Path(__file__).parent / "results" / "raw_results.jsonl"
 QDRANT_URL = "http://localhost:6333"
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
-SEED = 42
-
-
-def stratified_sample(questions: list[dict], n_per_type: int) -> list[dict]:
-    by_type: dict[str, list[dict]] = {}
-    for q in questions:
-        by_type.setdefault(q["question_type"], []).append(q)
-    rng = random.Random(SEED)
-    sample = []
-    for qtype, rows in sorted(by_type.items()):
-        rng.shuffle(rows)
-        sample.extend(rows[:n_per_type])
-    rng.shuffle(sample)
-    return sample
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--n-per-type", type=int, default=15, help="questions per question_type (3 types)")
     parser.add_argument("--resume", action="store_true", help="skip (question_id, condition) pairs already in results")
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=DEFAULT_RESULTS_PATH,
+        help=(
+            "Where to append/write run records (JSONL). Defaults to "
+            f"{DEFAULT_RESULTS_PATH.relative_to(Path(__file__).parent)}, the file the committed "
+            "results/summary.json was built from. Use a different path (e.g. "
+            "results/smoke_results.jsonl, see `make smoke`) so a smoke/dev run never touches the "
+            "committed results."
+        ),
+    )
     args = parser.parse_args()
+    RESULTS_PATH = args.out
 
     with open(QUESTIONS_PATH) as f:
         questions = [json.loads(line) for line in f]
     sample = stratified_sample(questions, args.n_per_type)
-    print(f"Sampled {len(sample)} questions ({args.n_per_type} per question_type)")
+    print(f"Sampled {len(sample)} questions ({args.n_per_type} per question_type, seed={SEED})")
+    print(f"Writing results to {RESULTS_PATH}")
 
     corpus = load_corpus()
     keyword_tool = KeywordSearchTool(corpus)

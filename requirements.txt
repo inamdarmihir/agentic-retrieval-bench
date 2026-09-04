@@ -1,5 +1,7 @@
-qdrant-client>=1.12
-fastembed>=0.4
-ollama>=0.4
-pypdf>=5.0
-cryptography>=3.1
+# Pinned to exact versions for reproducibility. Tested with Python 3.12
+# (3.10+ required: PEP 604 `X | Y` union type hints are used in agent.py/tools.py).
+qdrant-client==1.15.1
+fastembed==0.7.3
+ollama==0.6.1
+pypdf==6.14.0
+cryptography==46.0.3

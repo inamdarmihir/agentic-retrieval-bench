@@ -1,17 +1,23 @@
-"""Aggregate results/raw_results.jsonl into the summary table reported in
+"""Aggregate a raw_results.jsonl file into the summary table reported in
 the README: evidence recall, answer correctness, tool calls, and latency,
 by condition and by question_type.
+
+Defaults to the committed results/raw_results.jsonl -> results/summary.json
+pair. Pass --in/--out to point at a different file (e.g. results from
+`make smoke`) without touching the committed results.
 """
 
+import argparse
 import json
 from collections import defaultdict
 from pathlib import Path
 
-RESULTS_PATH = Path(__file__).parent / "results" / "raw_results.jsonl"
+DEFAULT_IN = Path(__file__).parent / "results" / "raw_results.jsonl"
+DEFAULT_OUT = Path(__file__).parent / "results" / "summary.json"
 
 
-def summarize() -> None:
-    with open(RESULTS_PATH) as f:
+def summarize(in_path: Path = DEFAULT_IN, out_path: Path = DEFAULT_OUT) -> None:
+    with open(in_path) as f:
         rows = [json.loads(line) for line in f]
 
     def agg(rows: list[dict]) -> dict:
@@ -55,11 +61,19 @@ def summarize() -> None:
         "overall": {cond: agg(rs) for cond, rs in by_condition.items()},
         "by_type": {f"{qtype}__{cond}": agg(rs) for (qtype, cond), rs in by_type_cond.items()},
     }
-    out_path = RESULTS_PATH.parent / "summary.json"
+    out_path.parent.mkdir(exist_ok=True)
     with open(out_path, "w") as f:
         json.dump(summary, f, indent=2)
     print(f"\nWrote {out_path}")
 
 
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--in", dest="in_path", type=Path, default=DEFAULT_IN, help="raw results JSONL to read")
+    parser.add_argument("--out", dest="out_path", type=Path, default=DEFAULT_OUT, help="summary JSON to write")
+    args = parser.parse_args()
+    summarize(args.in_path, args.out_path)
+
+
 if __name__ == "__main__":
-    summarize()
+    main()
