@@ -4,19 +4,21 @@ vector search. Same corpus, same page-level granularity, same result shape
 between conditions is the retrieval mechanism itself.
 """
 
+from __future__ import annotations
+
 import json
 import math
 import re
 from collections import Counter
 from dataclasses import dataclass
-from pathlib import Path
 
-from fastembed import TextEmbedding
-from qdrant_client import QdrantClient
+from typing import TYPE_CHECKING
 
-CORPUS_PATH = Path(__file__).parent / "data" / "corpus.jsonl"
-COLLECTION_NAME = "financebench_pages"
-EMBED_MODEL = "BAAI/bge-small-en-v1.5"
+from config import COLLECTION_NAME, CORPUS_PATH
+
+if TYPE_CHECKING:  # heavy imports are only needed for annotations
+    from fastembed import TextEmbedding
+    from qdrant_client import QdrantClient
 
 
 @dataclass

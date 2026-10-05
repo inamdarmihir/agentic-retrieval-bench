@@ -1,9 +1,10 @@
-.PHONY: install download extract index benchmark analyze smoke clean help
+.PHONY: install test download extract index benchmark analyze smoke clean help
 
 help:
 	@echo "agentic-retrieval-bench"
 	@echo ""
 	@echo "  make install    Install pinned Python dependencies"
+	@echo "  make test       Run the offline unit tests (no Ollama or Docker needed)"
 	@echo "  make smoke      ~3-question smoke test (~2-3MB download, a few minutes)"
 	@echo "  make download   Fetch all 150 questions + 84 PDFs (~140MB, full run)"
 	@echo "  make extract    Extract page text from downloaded PDFs"
@@ -18,7 +19,10 @@ help:
 install:
 	python3 -m venv .venv
 	.venv/bin/pip install --upgrade pip
-	.venv/bin/pip install -r requirements.txt
+	.venv/bin/pip install -r requirements.txt pytest
+
+test:
+	.venv/bin/python -m pytest -q
 
 download:
 	python3 download_data.py

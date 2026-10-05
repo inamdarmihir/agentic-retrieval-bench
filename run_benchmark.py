@@ -13,14 +13,12 @@ from fastembed import TextEmbedding
 from qdrant_client import QdrantClient
 
 from agent import run_agent
+from config import EMBED_MODEL, QDRANT_URL, QUESTIONS_PATH, RESULTS_DIR
 from evaluate import is_correct
 from sampling import SEED, stratified_sample
 from tools import KeywordSearchTool, VectorSearchTool, load_corpus
 
-QUESTIONS_PATH = Path(__file__).parent / "data" / "questions.jsonl"
-DEFAULT_RESULTS_PATH = Path(__file__).parent / "results" / "raw_results.jsonl"
-QDRANT_URL = "http://localhost:6333"
-EMBED_MODEL = "BAAI/bge-small-en-v1.5"
+DEFAULT_RESULTS_PATH = RESULTS_DIR / "raw_results.jsonl"
 
 
 def main() -> None:
@@ -40,13 +38,13 @@ def main() -> None:
         ),
     )
     args = parser.parse_args()
-    RESULTS_PATH = args.out
+    results_path = args.out
 
     with open(QUESTIONS_PATH) as f:
         questions = [json.loads(line) for line in f]
     sample = stratified_sample(questions, args.n_per_type)
     print(f"Sampled {len(sample)} questions ({args.n_per_type} per question_type, seed={SEED})")
-    print(f"Writing results to {RESULTS_PATH}")
+    print(f"Writing results to {results_path}")
 
     corpus = load_corpus()
     keyword_tool = KeywordSearchTool(corpus)
@@ -55,17 +53,17 @@ def main() -> None:
     client = QdrantClient(url=QDRANT_URL)
     vector_tool = VectorSearchTool(client, embedder)
 
-    RESULTS_PATH.parent.mkdir(exist_ok=True)
+    results_path.parent.mkdir(exist_ok=True)
     done = set()
-    if args.resume and RESULTS_PATH.exists():
-        with open(RESULTS_PATH) as f:
+    if args.resume and results_path.exists():
+        with open(results_path) as f:
             for line in f:
                 r = json.loads(line)
                 done.add((r["financebench_id"], r["condition"]))
         print(f"Resuming: {len(done)} runs already recorded")
 
     mode = "a" if args.resume else "w"
-    with open(RESULTS_PATH, mode) as out:
+    with open(results_path, mode) as out:
         for i, q in enumerate(sample):
             gold_doc = q["doc_name"]
             gold_page = q["evidence"][0]["evidence_page_num"]
@@ -100,7 +98,7 @@ def main() -> None:
                     f"turns={result.turns_used} {elapsed:.1f}s"
                 )
 
-    print(f"\nDone. Results in {RESULTS_PATH}")
+    print(f"\nDone. Results in {results_path}")
 
 
 if __name__ == "__main__":

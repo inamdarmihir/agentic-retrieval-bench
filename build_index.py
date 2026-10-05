@@ -4,14 +4,12 @@ Qdrant collection. Run once after extract_corpus.py.
 
 import json
 import time
-from pathlib import Path
 
 from fastembed import TextEmbedding
 from qdrant_client import QdrantClient, models
 
-from tools import COLLECTION_NAME, CORPUS_PATH, EMBED_MODEL
+from config import COLLECTION_NAME, CORPUS_PATH, EMBED_MODEL, QDRANT_URL
 
-QDRANT_URL = "http://localhost:6333"
 BATCH_SIZE = 64
 
 

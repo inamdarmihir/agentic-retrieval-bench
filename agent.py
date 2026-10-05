@@ -10,10 +10,8 @@ from dataclasses import dataclass, field
 
 import ollama
 
+from config import MAX_TURNS, OLLAMA_MODEL as MODEL
 from tools import KeywordSearchTool, SearchHit, VectorSearchTool, format_hits
-
-MODEL = "qwen2.5:3b-instruct"
-MAX_TURNS = 4
 
 SYSTEM_PROMPT = (
     "You are a research agent. You do not have SEC filings memorized. Use the search "
