@@ -1,21 +1,32 @@
-# Agentic Retrieval Bench
+# 🔎 Agentic Retrieval Bench: Does a Small Local Agent Need a Vector Database?
 
-**Does a small local agent need a vector database to find the right evidence?**
+> **The same Qwen 2.5 3B agent, the same financial filings, two search tools: keyword TF-IDF and Qdrant dense search. Raw traces for all 90 runs are committed.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/inamdarmihir/agentic-retrieval-bench)](https://github.com/inamdarmihir/agentic-retrieval-bench/commits/main)
+
+---
+
+## 🚀 What Is This?
 
 This benchmark gives the same Qwen 2.5 3B agent two search tools, one at a time: lexical TF-IDF search and dense search in Qdrant. Both search the same financial filings. The questions, agent loop and scoring stay the same.
 
 In the committed run, vector search found the reference evidence page for 18 of 45 questions. Keyword search found it for one. Final answers improved much less. Finding the page and reading the right number from it are different problems.
 
-[Results](#results) · [Quickstart](#quickstart) · [Method](#method) · [Limitations](#limitations) · [Article](https://mihirinamdar.substack.com/p/does-a-small-agent-need-a-vector)
+[Results](#-results) · [Quickstart](#-quick-start) · [Method](#-method) · [Limitations](#-limitations) · [Article](https://mihirinamdar.substack.com/p/does-a-small-agent-need-a-vector)
 
-## What you can do here
+---
+
+## 🚀 What You Can Do Here
 
 - Inspect every search call and final answer from 90 agent runs.
 - Swap retrieval tools without changing the agent harness.
 - Run a six-call smoke test before downloading the full filing corpus.
 - Separate evidence retrieval from answer correctness instead of treating them as one score.
 
-## Results
+---
+
+## 📊 Results
 
 45 FinanceBench questions, 15 from each question category. Each question was run once with each tool.
 
@@ -32,7 +43,9 @@ Evidence recall checks whether any search returned the gold document and page, a
 
 For metrics-generated questions, vector search found evidence 60% of the time. The article's manual review accepted two answers out of 15. Better retrieval did not remove the answer-extraction bottleneck. These results do not establish a general winner between lexical and vector search.
 
-## Quickstart
+---
+
+## ⚡ Quick Start
 
 Requirements: Python, Docker and [Ollama](https://ollama.com). Dependencies are pinned in [`requirements.txt`](requirements.txt). First use downloads the model and dataset.
 
@@ -77,7 +90,9 @@ python3 analyze_results.py --out /tmp/summary_check.json
 diff /tmp/summary_check.json results/summary.json
 ```
 
-## Method
+---
+
+## 🔬 Method
 
 ```text
 FinanceBench questions + source PDFs
@@ -105,7 +120,9 @@ FinanceBench questions + source PDFs
 
 The original README records Ollama digest `357c53fb659c` (Q4_K_M). Check your installed model with `ollama show qwen2.5:3b-instruct`; a moving model tag is not a guarantee of the same weights.
 
-## Project map
+---
+
+## 🗂️ Project Map
 
 | File | Purpose |
 | --- | --- |
@@ -115,7 +132,9 @@ The original README records Ollama digest `357c53fb659c` (Q4_K_M). Check your in
 | `evaluate.py`, `analyze_results.py` | Score and aggregate outputs |
 | `results/`, `RESULTS.md` | Committed traces, summary and reading guide |
 
-## Limitations
+---
+
+## ⚠️ Limitations
 
 - One model, one corpus, 45 questions and one run per condition. There are no repeated-trial confidence intervals.
 - A matching year can pass a wrong answer. Numeric units and valid paraphrases can also be scored incorrectly. The article's manual review is a different evaluation, not a fix already applied to the code.
@@ -123,11 +142,15 @@ The original README records Ollama digest `357c53fb659c` (Q4_K_M). Check your in
 - TF-IDF is one lexical baseline. This is not a comparison against tuned BM25 or hybrid search.
 - Serial local timings are not production-load latency measurements. The experiment does not establish multi-hop performance.
 
-## Contributing
+---
+
+## 🤝 Contributing
 
 Useful extensions include repeated trials, a stronger lexical baseline and manual auditing of the answer heuristic. Keep the same questions and corpus across conditions, and commit raw outputs alongside any new result table.
 
-## Sources and license
+---
+
+## 📚 Sources and License
 
 Data: [FinanceBench](https://github.com/patronus-ai/financebench), CC BY-NC 4.0. Downloaded PDFs and extracted corpus are not committed.
 
